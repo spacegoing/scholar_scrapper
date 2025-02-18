@@ -1,0 +1,39 @@
+**Task: Citation Ranking and Labeling for Research Survey on RLHF, DPO, and GRPO**
+
+I am conducting a research survey focused on RLHF (Reinforcement Learning with Human Feedback), DPO (Direct Preference Optimization), and GRPO (Gradient-based Reinforcement Learning with Preference Optimization). I need help categorizing and labeling a large number of citations from a CSV file.
+
+**Input:**
+- The CSV file contains the following fields:
+  - **Title**
+  - **Cited By**
+  - **URL**
+  - **Abstract** (may be empty string '' in some cases)
+
+**Output:**
+- For each citation, generate two fields:
+  1. **Category:** Categorize the paper based on its content into one of the following short keys (with full word descriptions):
+     - **"app" (Application)**: Papers focusing on the practical use of RLHF, DPO, or GRPO algorithms in real-world scenarios.
+     - **"theory" (Theoretical Analysis)**: Papers discussing the theoretical principles, challenges, or properties of RLHF, DPO, or GRPO.
+     - **"algo" (Algorithmic Improvement)**: Papers proposing new algorithms or improvements to existing RLHF, DPO, or GRPO techniques.
+     - **"bp" (Best Practices)**: Papers focusing on guidelines, methodologies, or frameworks for implementing and scaling RLHF, DPO, or GRPO systems effectively.
+     - **"eval" (Evaluation & Benchmarking)**: Papers evaluating or comparing the performance of RLHF, DPO, or GRPO methods.
+     - **"ethics" (Ethical & Societal Impact)**: Papers addressing ethical concerns, fairness, societal impact, or risks associated with RLHF, DPO, or GRPO methods.
+     - **"other" (Other)**: Papers that don’t fit into the categories above but are still relevant to the broader topics of RLHF, DPO, or GRPO.
+
+  2. **Importance:** Evaluate the importance of the paper.
+     - **"high"**: Significant contribution to the field.
+     - **"low"**: Minimal contribution or incremental work.
+
+**Instructions:**
+- Use the title of each citation to infer its category if the abstract is not available.
+- When the abstract is available, use it as the primary source of information for categorization.
+- Ensure that the categorization and importance labeling reflect the content, significance, and relevance of the work.
+
+**Example Output Format:**
+
+```json
+{
+  "Category": "theory",
+  "Importance": "high"
+}
+```
