@@ -80,7 +80,7 @@ def fetch_abstract(row):
     domain = url.split("/")[2].split(".")[-2]
     print(f"Fetching {domain}: {url}")
     driver.get(url)
-    time.sleep(2)  # Wait for page to load
+    time.sleep(3)  # Wait for page to load
     
     try:
         parser = PARSER_MAP.get(domain, parse_blank)
@@ -98,7 +98,7 @@ def fetch_abstract(row):
             writer.writerow([row['Title'], row['Cited By'], abstract, row['URL']])
 
 # Run extraction in parallel with up to 20 threads
-with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
+with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
     executor.map(fetch_abstract, [row for _, row in df.iterrows()])
 
 print(f"🎉 Process completed. Results saved to {output_csv_path}.")
