@@ -1,3 +1,4 @@
+import csv
 import pandas as pd
 import concurrent.futures
 from selenium import webdriver
@@ -5,6 +6,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 import time
+import threading
 
 # Define XPath parsers for each domain
 def parse_openreview(driver):
@@ -61,6 +63,11 @@ input_csv_path = "./dpo_citations.csv"
 output_csv_path = "./dpo_abstract.csv"
 df = pd.read_csv(input_csv_path)
 
+# Create a lock for thread-safe writing to the CSV file
+csv_lock = threading.Lock()
+with open(output_csv_path, 'a') as f:
+    f.write(f"Title,Cited By,URL")
+
 def fetch_abstract(row):
     chrome_options = Options()
     chrome_options.add_argument("--no-sandbox")
@@ -83,13 +90,15 @@ def fetch_abstract(row):
         abstract = ''
     
     driver.quit()
-    return abstract
+    
+    # Append the result to the CSV file
+    with csv_lock:
+        with open(output_csv_path, 'a', newline='', encoding='utf-8') as f:
+            writer = csv.writer(f, quoting=csv.QUOTE_MINIMAL)  # Ensures proper quoting
+            writer.writerow([row['Title'], row['Cited By'], abstract, row['URL']])
 
 # Run extraction in parallel with up to 20 threads
 with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
-    df["Abstract"] = list(executor.map(fetch_abstract, [row for _, row in df.iterrows()]))
+    executor.map(fetch_abstract, [row for _, row in df.iterrows()])
 
-# Save to new CSV file
-df.to_csv(output_csv_path, index=False)
 print(f"🎉 Process completed. Results saved to {output_csv_path}.")
-
