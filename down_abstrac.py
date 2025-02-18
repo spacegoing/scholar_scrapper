@@ -66,14 +66,15 @@ df = pd.read_csv(input_csv_path)
 # Create a lock for thread-safe writing to the CSV file
 csv_lock = threading.Lock()
 with open(output_csv_path, 'a') as f:
-    f.write(f"Title,Cited By,URL")
+    f.write(f"Title,Cited By,URL\n")
 
 def fetch_abstract(row):
     chrome_options = Options()
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
     
-    service = Service("./chromedriver")  # Update path to chromedriver
+    # service = Service("./chromedriver")  # Update path to chromedriver
+    service = Service("./chromedriver_linux")  # Update path to chromedriver
     driver = webdriver.Chrome(service=service, options=chrome_options)
     
     url = row["URL"]
